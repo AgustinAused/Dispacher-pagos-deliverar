@@ -1,0 +1,27 @@
+name: Full Stack E2E Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  infra:
+    name: 🚀 Deploy Infraestructura con Terraform
+    uses: AgustinAused/infra-repo/.github/workflows/terraform.yml@main
+    secrets: inherit
+
+  backend:
+    name: 🧠 Deploy Backend Java
+    needs: infra
+    uses: tu-org/backend-repo/.github/workflows/cd.yml@main
+    with:
+      ec2_ip: ${{ needs.infra.outputs.ec2_ip }}
+      db_endpoint: ${{ needs.infra.outputs.rds_endpoint }}
+    secrets: inherit
+
+  frontend:
+    name: 🎨 Deploy Frontend React
+    needs: infra
+    uses: tu-org/frontend-repo/.github/workflows/deploy.yml@main
+    with:
+      ec2_ip: ${{ needs.infra.outputs.ec2_ip }}
+    secrets: inherit
