@@ -12,9 +12,9 @@ jobs:
   backend:
     name: 🧠 Deploy Backend Java
     needs: infra
-    uses: tu-org/backend-repo/.github/workflows/cd.yml@main
+    uses: IgnacioOv/deliverar-pagos-backend/.github/workflows/ci-cd.yml@main
     with:
-      ec2_ip: ${{ needs.infra.outputs.ec2_ip }}
+      alb_dns: ${{ needs.infra.outputs.alb_dns }}
       db_endpoint: ${{ needs.infra.outputs.rds_endpoint }}
     secrets: inherit
 
@@ -23,5 +23,6 @@ jobs:
     needs: infra
     uses: tu-org/frontend-repo/.github/workflows/deploy.yml@main
     with:
-      ec2_ip: ${{ needs.infra.outputs.ec2_ip }}
+      alb_dns: ${{ needs.infra.outputs.alb_dns }}
+      db_endpoint: ${{ needs.infra.outputs.rds_endpoint }}
     secrets: inherit
