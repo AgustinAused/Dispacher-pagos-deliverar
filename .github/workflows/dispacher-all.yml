@@ -6,7 +6,7 @@ on:
 jobs:
   infra:
     name: 🚀 Deploy Infraestructura con Terraform
-    uses: AgustinAused/infra-repo/.github/workflows/terraform.yml@main
+    uses: AgustinAused/infra-repo/.github/workflows/terraform.yml@master
     secrets: inherit
 
   backend:
@@ -15,14 +15,15 @@ jobs:
     uses: IgnacioOv/deliverar-pagos-backend/.github/workflows/ci-cd.yml@main
     with:
       alb_dns: ${{ needs.infra.outputs.alb_dns }}
-      db_endpoint: ${{ needs.infra.outputs.rds_endpoint }}
+      db_endpoint: ${{ needs.infra.outputs.db_endpoint }}
+      sonarqube_url: ${{ needs.infra.outputs.sonarqube_url }}
     secrets: inherit
 
-  frontend:
-    name: 🎨 Deploy Frontend React
-    needs: infra
-    uses: tu-org/frontend-repo/.github/workflows/deploy.yml@main
-    with:
-      alb_dns: ${{ needs.infra.outputs.alb_dns }}
-      db_endpoint: ${{ needs.infra.outputs.rds_endpoint }}
-    secrets: inherit
+  # frontend:
+  #   name: 🎨 Deploy Frontend React
+  #   needs: infra
+  #   uses:
+  #   with:
+  #     alb_dns: ${{ needs.infra.outputs.alb_dns }}
+  #     db_endpoint: ${{ needs.infra.outputs.rds_endpoint }}
+  #   secrets: inherit
